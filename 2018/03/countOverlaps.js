@@ -2,7 +2,7 @@ const fs = require('fs');
 
 const claims = fs.readFileSync('input.txt', { encoding: 'utf-8' }).trim().split('\n');
 
-let processedClaims = new Map();
+let processedClaims = {};
 let overlapCounter = 0;
 
 for (const claim of claims) {
@@ -18,13 +18,13 @@ for (const claim of claims) {
     for(let y = yStart; y < yMax; y++) {
       const coordinates = [x, y].toString();
 
-      if (processedClaims.has(coordinates)) {
-        if (processedClaims.get(coordinates) === 1) {
+      if (processedClaims[coordinates]) {
+        if (processedClaims[coordinates] === 1) {
           overlapCounter++;
-          processedClaims.set(coordinates, 'X');
+          processedClaims[coordinates] = 'X';
         }
       } else {
-        processedClaims.set(coordinates, 1);
+        processedClaims[coordinates] = 1;
       }
     }
   }
