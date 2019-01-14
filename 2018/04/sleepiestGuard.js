@@ -4,7 +4,6 @@ const fs = require('fs');
 function processGuardLogs(inputFile) {
   const sortedLogEntries = fs.readFileSync(inputFile, { encoding: 'utf-8' }).trim().split('\n').sort();
 
-  // TODO: Use Map instead (Number keys, can iterate directly over)
   // { guardId: {
   //   totalSleepTime: 0,
   //   minutesHistogram: []
@@ -87,7 +86,7 @@ function guardWithMaxSleep(guardSleepData) {
     }
   }
 
-  return(sleepiestGuardId);
+  return(Number(sleepiestGuardId));
 }
 
 // Find the most slept minute for that guard (could print this out as a histogram for fun)
