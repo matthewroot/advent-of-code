@@ -1,4 +1,4 @@
-const { processGuardLogs, guardWithMaxSleep, findBestMinute } = require('./sleepiestGuard.js');
+const { processGuardLogs, guardWithMaxSleep, findBestMinute, findMaxFrequency } = require('./sleepiestGuard.js');
 
 let processedGuardData;
 
@@ -15,4 +15,9 @@ test('findBestMinute() should determine the minute that the guard sleeps the mos
   const sleepiestGuard = guardWithMaxSleep(processedGuardData);
   const bestMinute = findBestMinute(processedGuardData[sleepiestGuard].minutesHistogram);
   expect(bestMinute).toBe(24);
-})
+});
+
+test('findMaxFrequency should determine the guard most frequently asleep on the same minute', () => {
+  const actual = findMaxFrequency(processedGuardData);
+  expect(actual).toBe(4455);
+});

@@ -102,4 +102,31 @@ function findBestMinute(minutesHistogram) {
   return(mostSleptMinute);
 }
 
-module.exports = { processGuardLogs, guardWithMaxSleep, findBestMinute };
+// Find the guard who is most frequently asleep on the same minute
+function findMaxFrequency(guardData) {
+  let maxGuardId, maxMinute, maxMinuteValue = 0;
+
+  for (const id in guardData) {
+    if (guardData.hasOwnProperty(id)) {
+      const minutes = guardData[id].minutesHistogram;
+
+      if (!maxGuardId) {
+        maxGuardId = id;
+      }
+  
+      for (let index = 0; index < minutes.length; index++) {
+        const minuteValue = minutes[index];
+        
+        if (minuteValue > maxMinuteValue) {
+          maxMinute = index;
+          maxMinuteValue = minuteValue;
+          maxGuardId = id;
+        }
+      }
+    }
+  }
+  
+  return (Number(maxGuardId) * maxMinute);
+}
+
+module.exports = { processGuardLogs, guardWithMaxSleep, findBestMinute, findMaxFrequency };
