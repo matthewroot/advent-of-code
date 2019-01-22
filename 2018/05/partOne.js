@@ -1,3 +1,4 @@
-const { processReactions } = require('./processReactions');
+const { parseInput, processReactions } = require('./processReactions');
 
-console.log(processReactions('./input.txt'));
+const polymerString = parseInput('./input.txt');
+console.log(processReactions(polymerString));

@@ -1,50 +1,23 @@
-const {
-  processReactions,
-  createLinkedList,
-  listLength,
-} = require('./processReactions');
-const ListNode = require('./listNode');
+const { processReactions, parseInput } = require('./processReactions');
 
-test('processReactions should return the number of units remaining after processing reactions', () => {
-  const units = processReactions('./2018/05/testInput.txt');
-  expect(units).toBe(10);
-});
+test.only('processReactions should return the number of units remaining after processing reactions', () => {
+  let polymerString = parseInput('./2018/05/testInput.txt');
+  let polymerLength = processReactions(polymerString);
+  expect(polymerLength).toBe(10);
 
-describe('createLinkedList()', () => {
-  const inputString = 'dabAcCaCBAcCcaDA';
+  polymerString = 'aA';
+  polymerLength = processReactions(polymerString);
+  expect(polymerLength).toBe(0);
 
-  test('should build a linked list with number of nodes equal to input strings length', () => {
-    let list = createLinkedList(inputString);
-    let count = 1;
+  polymerString = 'abBA';
+  polymerLength = processReactions(polymerString);
+  expect(polymerLength).toBe(0);
 
-    while (list.next) {
-      count++;
-      list = list.next;
-    }
+  polymerString = 'abAB';
+  polymerLength = processReactions(polymerString);
+  expect(polymerLength).toBe(4);
 
-    expect(count).toBe(inputString.length);
-  });
-
-  test('should return the first node in the linked list', () => {
-    const list = createLinkedList(inputString);
-
-    expect(list.letter).toBe('d');
-  });
-});
-
-describe('listLength()', () => {
-  test('should count the number of nodes in a linked list', () => {
-    let linkedList;
-    let lengthOfList = listLength(linkedList);
-    expect(lengthOfList).toBe(0);
-
-    linkedList = new ListNode('a');
-    lengthOfList = listLength(linkedList);
-    expect(lengthOfList).toBe(1);
-
-    const secondNode = new ListNode('b');
-    linkedList.next = secondNode;
-    lengthOfList = listLength(linkedList);
-    expect(lengthOfList).toBe(2);
-  });
+  polymerString = 'aabAAB';
+  polymerLength = processReactions(polymerString);
+  expect(polymerLength).toBe(6);
 });
