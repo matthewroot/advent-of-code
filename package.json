@@ -9,7 +9,6 @@
     "jest": "^23.6.0"
   },
   "dependencies": {
-    "node-fetch": "^2.3.0",
-    "static-kdtree": "^1.0.2"
+    "node-fetch": "^2.3.0"
   }
 }
