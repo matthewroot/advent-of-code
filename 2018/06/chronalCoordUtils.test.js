@@ -2,6 +2,8 @@ const {
   parseInput,
   getGridBounds,
   findNearestNeighbor,
+  findMaxArea,
+  isGridBoundary,
 } = require('./chronalCoordUtils');
 const createKDTree = require('static-kdtree');
 
@@ -45,4 +47,46 @@ test.skip('find nearest neighbors returns the two closest neighbors to a point',
   [x, y] = [0, 9];
   nearestNeighbor = findNearestNeighbor(coordTree, x, y);
   expect(nearestNeighbor).toEqual(1);
+});
+
+test('findMaxArea returns the largest, non-infinite area', () => {
+  const coordinateAreas = {
+    '[1, 1]': 'infinite',
+    '[1, 6]': 'infinite',
+    '[8, 3]': 'infinite',
+    '[3, 4]': 9,
+    '[5, 5]': 17,
+    '[8, 9]': 'infinite',
+  };
+
+  expect(findMaxArea(coordinateAreas)).toBe(17);
+});
+
+test('isGridBoundary determines if a point lies on the edge of the grid', () => {
+  const xBound = 8;
+  const yBound = 9;
+
+  let x = 0;
+  let y = 0;
+  expect(isGridBoundary(x, y, xBound, yBound)).toBe(true);
+
+  x = xBound - 1;
+  y = 0;
+  expect(isGridBoundary(x, y, xBound, yBound)).toBe(true);
+
+  x = 0;
+  y = yBound - 1;
+  expect(isGridBoundary(x, y, xBound, yBound)).toBe(true);
+
+  x = xBound - 1;
+  y = yBound - 1;
+  expect(isGridBoundary(x, y, xBound, yBound)).toBe(true);
+
+  x = 2;
+  y = 3;
+  expect(isGridBoundary(x, y, xBound, yBound)).toBe(false);
+
+  x = xBound - 2;
+  y = yBound - 2;
+  expect(isGridBoundary(x, y, xBound, yBound)).toBe(false);
 });

@@ -8,7 +8,7 @@ const createKDTree = require('static-kdtree');
 const coordinates = parseInput('./input.txt');
 const [xBound, yBound] = getGridBounds(coordinates);
 const coordTree = createKDTree(coordinates);
-let coordCounts = new Map();
+let coordinateAreas = new Map();
 
 // Manhattan distance = absolute difference between two Cartesian points
 
@@ -27,19 +27,14 @@ let coordCounts = new Map();
 //     * if distance to 2 nearest neighbors is different
 //       * if location is on grid boundary, set coordinate value to 'infinite'
 //       * else add to count for nearest point (if not in counts object, add it)
-// * Filter coordinate counts to remove all that infinite
-// * Iterate through remaining coordinate counts to find the max value
+// * Iterate through remaining coordinate counts to find the max value, ignore 'infinite'
 
 for (let x = 0; x < xBound; x++) {
   for (let y = 0; y < yBound; y++) {
     let nearestNeighbor = findNearestNeighbor(coordTree, x, y);
+
+    // if nearestNeighbor && !onGridBoundary(x,y)
   }
 }
-
-const filteredCoordCounts = coordCounts.forEach((value, key, map) => {
-  if (value === 'infinity') {
-    map.delete(key);
-  }
-});
 
 console.log(findMaxArea(filteredCoordCounts));
