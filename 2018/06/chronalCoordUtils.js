@@ -1,5 +1,4 @@
 const fs = require('fs');
-const createKDTree = require('static-kdtree');
 
 // Sample input line: 135, 127
 // Return: array with x,y coordinate objects
@@ -34,9 +33,40 @@ function getGridBounds(coordinates) {
   return [xBound, yBound];
 }
 
-function findNearestNeighbor(coordinates, x, y) {
-  // TODO: use something other static-kdtree, it does Euclidean distance
-  return coordTree.knn([x, y], 2);
+// Returns coordinates for nearest neighbor or null if two coordinates
+// are equally close
+function findNearestNeighbor(coordinatesMap, x, y) {
+  let nearestNeighbor;
+  let minDistance;
+  let multipleNearest = false;
+
+  for (const coordinates in coordinatesMap) {
+    if (coordinatesMap.hasOwnProperty(coordinates)) {
+      if (coordinates === JSON.stringify([x, y])) {
+        return coordinates;
+      }
+
+      let distance = manhattanDistance(coordinates, x, y);
+
+      if (!minDistance) {
+        minDistance = distance;
+        nearestNeighbor = coordinates;
+        continue;
+      }
+
+      if (distance === minDistance) {
+        multipleNearest = true;
+      }
+
+      if (distance < minDistance) {
+        minDistance = distance;
+        nearestNeighbor = coordinates;
+        multipleNearest = false;
+      }
+    }
+  }
+
+  return multipleNearest ? null : nearestNeighbor;
 }
 
 function findMaxArea(coordinateAreas) {
@@ -68,10 +98,28 @@ function isGridBoundary(x, y, xBound, yBound) {
   return false;
 }
 
+function buildAreasMap(coordinatesArray) {
+  let areaMap = {};
+
+  coordinatesArray.forEach(coordinates => {
+    let stringCoordinates = JSON.stringify(coordinates);
+    areaMap[stringCoordinates] = 0;
+  });
+
+  return areaMap;
+}
+
+function manhattanDistance(point, x, y) {
+  let [pointX, pointY] = JSON.parse(point);
+
+  return Math.abs(x - pointX) + Math.abs(y - pointY);
+}
+
 module.exports = {
   parseInput,
   getGridBounds,
   findNearestNeighbor,
   findMaxArea,
   isGridBoundary,
+  buildAreasMap,
 };

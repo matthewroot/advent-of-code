@@ -4,8 +4,8 @@ const {
   findNearestNeighbor,
   findMaxArea,
   isGridBoundary,
+  buildAreasMap,
 } = require('./chronalCoordUtils');
-const createKDTree = require('static-kdtree');
 
 let parsedInput;
 
@@ -25,28 +25,43 @@ test('getGridBounds returns the max X and Y values from a set of coordinates', (
   expect(y).toBe(9);
 });
 
-test.skip('find nearest neighbors returns the two closest neighbors to a point', () => {
-  const coordTree = createKDTree(parsedInput);
-  let [x, y] = [0, 0];
-  let nearestNeighbor = findNearestNeighbor(coordTree, x, y);
+describe('findNearestNeighbor', () => {
+  let coordinatesMap;
 
-  expect(nearestNeighbor).toEqual(0);
+  beforeAll(() => {
+    coordinatesMap = {
+      '[1,1]': 0,
+      '[1,6]': 0,
+      '[8,3]': 0,
+      '[3,4]': 0,
+      '[5,5]': 0,
+      '[8,9]': 0,
+    };
+  });
 
-  [x, y] = [6, 0];
-  nearestNeighbor = findNearestNeighbor(coordTree, x, y);
-  expect(nearestNeighbor).toBeNull;
+  test('should return the closest coordinate to a point', () => {
+    let [x, y] = [0, 0];
+    let nearestNeighbor = findNearestNeighbor(coordinatesMap, x, y);
+    expect(nearestNeighbor).toEqual('[1,1]');
 
-  [x, y] = [5, 2];
-  nearestNeighbor = findNearestNeighbor(coordTree, x, y);
-  expect(nearestNeighbor).toEqual(4);
+    [x, y] = [5, 2];
+    nearestNeighbor = findNearestNeighbor(coordinatesMap, x, y);
+    expect(nearestNeighbor).toEqual('[5,5]');
 
-  [x, y] = [1, 1];
-  nearestNeighbor = findNearestNeighbor(coordTree, x, y);
-  expect(nearestNeighbor).toEqual(0);
+    [x, y] = [1, 1];
+    nearestNeighbor = findNearestNeighbor(coordinatesMap, x, y);
+    expect(nearestNeighbor).toEqual('[1,1]');
 
-  [x, y] = [0, 9];
-  nearestNeighbor = findNearestNeighbor(coordTree, x, y);
-  expect(nearestNeighbor).toEqual(1);
+    [x, y] = [0, 9];
+    nearestNeighbor = findNearestNeighbor(coordinatesMap, x, y);
+    expect(nearestNeighbor).toEqual('[1,6]');
+  });
+
+  test('should return null when 2 or more coordinates are closest to a point', () => {
+    let [x, y] = [5, 0];
+    let nearestNeighbor = findNearestNeighbor(coordinatesMap, x, y);
+    expect(nearestNeighbor).toBeNull();
+  });
 });
 
 test('findMaxArea returns the largest, non-infinite area', () => {
@@ -89,4 +104,17 @@ test('isGridBoundary determines if a point lies on the edge of the grid', () => 
   x = xBound - 2;
   y = yBound - 2;
   expect(isGridBoundary(x, y, xBound, yBound)).toBe(false);
+});
+
+test('buildAreasMap constructs a mapping of coordinate to area size', () => {
+  const expectedMap = {
+    '[1,1]': 0,
+    '[1,6]': 0,
+    '[8,3]': 0,
+    '[3,4]': 0,
+    '[5,5]': 0,
+    '[8,9]': 0,
+  };
+
+  expect(buildAreasMap(parsedInput)).toEqual(expectedMap);
 });
