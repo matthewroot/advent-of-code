@@ -109,10 +109,21 @@ function buildAreasMap(coordinatesArray) {
   return areaMap;
 }
 
+// point: JSON string representation of a coordinate point "[1,2]"
 function manhattanDistance(point, x, y) {
   let [pointX, pointY] = JSON.parse(point);
 
   return Math.abs(x - pointX) + Math.abs(y - pointY);
+}
+
+function totalManhattanDistance(coordinates, x, y) {
+  let sumDistance = 0;
+
+  coordinates.forEach(coordinate => {
+    sumDistance += manhattanDistance(JSON.stringify(coordinate), x, y);
+  });
+
+  return sumDistance;
 }
 
 module.exports = {
@@ -122,4 +133,5 @@ module.exports = {
   findMaxArea,
   isGridBoundary,
   buildAreasMap,
+  totalManhattanDistance,
 };

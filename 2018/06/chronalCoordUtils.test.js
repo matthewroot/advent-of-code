@@ -5,6 +5,7 @@ const {
   findMaxArea,
   isGridBoundary,
   buildAreasMap,
+  totalManhattanDistance,
 } = require('./chronalCoordUtils');
 
 let parsedInput;
@@ -117,4 +118,12 @@ test('buildAreasMap constructs a mapping of coordinate to area size', () => {
   };
 
   expect(buildAreasMap(parsedInput)).toEqual(expectedMap);
+});
+
+test('totalManhattanDistance calculates the sum of manhattan distances from a given point', () => {
+  let calculatedTotal = totalManhattanDistance(parsedInput, 4, 3);
+  expect(calculatedTotal).toBe(30);
+
+  calculatedTotal = totalManhattanDistance(parsedInput, 3, 4);
+  expect(calculatedTotal).toBe(28);
 });
