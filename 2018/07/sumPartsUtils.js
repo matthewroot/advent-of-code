@@ -3,6 +3,7 @@ const fs = require('fs');
 class Step {
   constructor(value) {
     this.value = value;
+    this.remainingTime = value.charCodeAt(0) - 4;
     this.nextSteps = [];
     this.prereqs = [];
   }
@@ -125,4 +126,60 @@ function prereqsMet(step, instructions) {
   return false;
 }
 
-module.exports = { Step, parseInput, determineOrder, processSteps };
+// Determines total time to process all steps based on list of known steps
+// and a number of workers that can process steps in parallel
+// Return: [Number] Number of 'seconds' to process all steps
+function parallelizedTime(knownSteps, numWorkers) {
+  let elapsedTime = 0;
+  let instructionOrder = '';
+  let workerQueue = [];
+  let availableNextSteps = getInitialSteps(knownSteps);
+
+  while (instructionOrder.length !== Object.keys(knownSteps).length) {
+    workerQueue.forEach(step => {
+      if (step.remainingTime === 0) {
+        instructionOrder = instructionOrder.concat(step.value);
+
+        step.nextSteps.forEach(nextStep => {
+          if (!availableNextSteps.includes(nextStep.value)) {
+            availableNextSteps.push(nextStep.value);
+          }
+        });
+
+        availableNextSteps.sort();
+      }
+    });
+
+    workerQueue = workerQueue.filter(step => step.remainingTime > 0);
+
+    let waitingSteps = [];
+
+    while (workerQueue.length < numWorkers && availableNextSteps.length > 0) {
+      let currentStep = knownSteps[availableNextSteps.shift()];
+
+      if (prereqsMet(currentStep, instructionOrder)) {
+        workerQueue.push(currentStep);
+      } else {
+        waitingSteps.push(currentStep.value);
+      }
+    }
+
+    availableNextSteps = availableNextSteps.concat(waitingSteps);
+
+    workerQueue.forEach(step => {
+      step.remainingTime--;
+    });
+
+    elapsedTime++;
+  }
+
+  return elapsedTime - 1;
+}
+
+module.exports = {
+  Step,
+  parseInput,
+  determineOrder,
+  processSteps,
+  parallelizedTime,
+};

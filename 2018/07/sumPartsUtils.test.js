@@ -3,6 +3,7 @@ const {
   parseInput,
   determineOrder,
   processSteps,
+  parallelizedTime,
 } = require('./sumPartsUtils');
 
 let parsedInput;
@@ -37,6 +38,13 @@ test('determineOrder returns the ordered set of instructions in a string', () =>
   const order = determineOrder(stepMapping);
 
   expect(order).toBe('CABDFE');
+});
+
+test('parallelizedTime calculates the number of seconds to process steps in parallel', () => {
+  const stepMapping = createStepMapping();
+  const time = parallelizedTime(stepMapping, 2);
+
+  expect(time).toBe(258);
 });
 
 function createStepMapping() {
