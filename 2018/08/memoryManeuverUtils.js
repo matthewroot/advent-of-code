@@ -16,19 +16,15 @@ function processNode(tree) {
   let numMetadata = tree.shift();
   let sum = 0;
 
-  // TODO: fix issue with popping from the end
-  // Look at node B which needs to pop 10,11,12 but instead would pop 1,99,2
-  for (let index = 0; index < numMetadata; index++) {
-    sum += tree.pop();
+  if (numChildren > 0) {
+    while (numChildren > 0) {
+      sum += processNode(tree);
+      numChildren--;
+    }
   }
 
-  if (numChildren > 0) {
-    let childCount = numChildren;
-
-    while (childCount > 0) {
-      sum += processNode(tree);
-      childCount--;
-    }
+  for (let index = 0; index < numMetadata; index++) {
+    sum += tree.shift();
   }
 
   return sum;
