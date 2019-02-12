@@ -1,9 +1,6 @@
 const fs = require('fs');
 const path = require('path');
 
-// Point
-// positionX, positionY
-// velocityX, velocityY
 class Point {
   constructor(values) {
     this.xPosition = values[0];
