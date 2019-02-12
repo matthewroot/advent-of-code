@@ -1,4 +1,8 @@
-const { parseInput } = require('./starsAlignUtils');
+const {
+  parseInput,
+  getGridParameters,
+  createPoints,
+} = require('./starsAlignUtils');
 
 // Goal: determine message displayed by progressively moving points
 
@@ -10,3 +14,5 @@ const { parseInput } = require('./starsAlignUtils');
 //    * Update positions
 //    * Pause for <= 0.5sec after each iteration to be able to see message
 const input = parseInput('input.txt');
+const { xOffset, yOffset, xMax, yMax } = getGridParameters(input);
+let points = createPoints(input, xOffset, yOffset);
