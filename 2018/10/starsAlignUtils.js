@@ -5,9 +5,9 @@ const path = require('path');
 // positionX, positionY
 // velocityX, velocityY
 class Point {
-  constructor(values, xOffset, yOffset) {
-    this.xPosition = values[0] + xOffset;
-    this.yPosition = values[1] + yOffset;
+  constructor(values) {
+    this.xPosition = values[0];
+    this.yPosition = values[1];
     this.xVelocity = values[2];
     this.yVelocity = values[3];
   }
@@ -30,7 +30,7 @@ function parseInput(filename) {
 // Processes the list of point definitions to determine the required X and Y offset
 // as well as the size of the grid
 // Return [Object] Value of xOffset, yOffset, xMax, and yMax
-function getGridParameters(input) {
+function getGridParameters(points) {
   let gridParameters = {
     xOffset: 0,
     yOffset: 0,
@@ -38,23 +38,23 @@ function getGridParameters(input) {
     yMax: 0,
   };
 
-  input.forEach(inputValues => {
-    if (inputValues[0] < gridParameters.xOffset) {
-      gridParameters.xOffset = inputValues[0];
+  for (const point of points) {
+    if (point.xPosition < gridParameters.xOffset) {
+      gridParameters.xOffset = point.xPosition;
     }
 
-    if (inputValues[1] < gridParameters.yOffset) {
-      gridParameters.yOffset = inputValues[1];
+    if (point.yPosition < gridParameters.yOffset) {
+      gridParameters.yOffset = point.yPosition;
     }
 
-    if (inputValues[0] > gridParameters.xMax) {
-      gridParameters.xMax = inputValues[0];
+    if (point.xPosition > gridParameters.xMax) {
+      gridParameters.xMax = point.xPosition;
     }
 
-    if (inputValues[1] > gridParameters.yMax) {
-      gridParameters.yMax = inputValues[1];
+    if (point.yPosition > gridParameters.yMax) {
+      gridParameters.yMax = point.yPosition;
     }
-  });
+  }
 
   gridParameters.xOffset = Math.abs(gridParameters.xOffset);
   gridParameters.yOffset = Math.abs(gridParameters.yOffset);
@@ -66,28 +66,36 @@ function getGridParameters(input) {
 
 // Processes raw input arrays into Point objects with appropriate offsets
 // input: [Array] Array of arrays storing xPosition, yPosition, xVelocity, yVelocity
-// xOffset: [Number] Value to adjust given xPosition by
-// yOffset: [Number] Value to adjust given yPosition by
 // Return: [Array] List of Points
-function createPoints(input, xOffset, yOffset) {
-  return input.map(pointValues => new Point(pointValues, xOffset, yOffset));
+function createPoints(input) {
+  return input.map(pointValues => new Point(pointValues));
 }
 
-// Checks if the list of points are still within the maximum boundaries of the grid
-// Return: [Boolean]
-function allPointsWithinBounds(points, grid) {
+// Updates the positions of all points based on the point's velocity
+// Return: [Array] List of points with updated positions
+function updatePointPositions(points) {
+  return points.map(point => {
+    point.xPosition += point.xVelocity;
+    point.yPosition += point.yVelocity;
+    return point;
+  });
+}
+
+function maxPointDistance(points) {
+  let xMin = points[0].xPosition;
+  let xMax = points[0].xPosition;
+
   for (const point of points) {
-    if (
-      point.xPosition < 0 ||
-      point.yPosition < 0 ||
-      point.xPosition >= grid.length ||
-      point.yPosition >= grid[0].length
-    ) {
-      return false;
+    if (point.xPosition < xMin) {
+      xMin = point.xPosition;
+    }
+
+    if (point.xPosition > xMax) {
+      xMax = point.xPosition;
     }
   }
 
-  return true;
+  return Math.abs(xMax - xMin);
 }
 
 module.exports = {
@@ -95,5 +103,6 @@ module.exports = {
   parseInput,
   getGridParameters,
   createPoints,
-  allPointsWithinBounds,
+  updatePointPositions,
+  maxPointDistance,
 };

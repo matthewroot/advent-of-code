@@ -2,7 +2,8 @@ const {
   parseInput,
   getGridParameters,
   createPoints,
-  allPointsWithinBounds,
+  updatePointPositions,
+  maxPointDistance,
 } = require('./starsAlignUtils');
 
 const processedInput = [
@@ -45,7 +46,8 @@ test('parseInput() processes input into an array of arrys with position and velo
 });
 
 test('getGridParameters() returns an object with grid offsets and grid size', () => {
-  const gridParameters = getGridParameters(processedInput);
+  const points = createPoints(processedInput);
+  const gridParameters = getGridParameters(points);
   expect(gridParameters.xOffset).toBe(6);
   expect(gridParameters.yOffset).toBe(4);
   expect(gridParameters.xMax).toBe(21);
@@ -53,44 +55,35 @@ test('getGridParameters() returns an object with grid offsets and grid size', ()
 });
 
 test('createPoints() returns an array of Point objects', () => {
-  const points = createPoints(processedInput, 6, 4);
+  const points = createPoints(processedInput);
   expect(points).toBeInstanceOf(Array);
   expect(points.length).toBe(processedInput.length);
 
   const firstPoint = points[0];
   expect(firstPoint.constructor.name).toBe('Point');
-  expect(firstPoint.xPosition).toBe(15);
-  expect(firstPoint.yPosition).toBe(5);
+  expect(firstPoint.xPosition).toBe(9);
+  expect(firstPoint.yPosition).toBe(1);
   expect(firstPoint.xVelocity).toBe(0);
   expect(firstPoint.yVelocity).toBe(2);
 });
 
-test('allPointWithinBounds() checks that each point lies within grid boundaries', () => {
+test('updatePointPositions() changes all point positions by their velocity', () => {
+  const points = createPoints(processedInput);
+  const updatedPoints = updatePointPositions(points);
+
+  expect(updatedPoints[0].xPosition).toBe(9);
+  expect(updatedPoints[0].yPosition).toBe(3);
+  expect(updatedPoints[1].xPosition).toBe(6);
+  expect(updatedPoints[1].yPosition).toBe(0);
+  expect(updatedPoints[2].xPosition).toBe(2);
+  expect(updatedPoints[2].yPosition).toBe(-1);
+  expect(updatedPoints[3].xPosition).toBe(4);
+  expect(updatedPoints[3].yPosition).toBe(9);
+});
+
+test('maxPointDistance() determines the difference between the min and max x positions', () => {
   const points = createPoints(processedInput, 6, 4);
-  const grid = new Array(22);
+  const distance = maxPointDistance(points);
 
-  for (let index = 0; index < grid.length; index++) {
-    grid[index] = new Array(16);
-  }
-
-  expect(allPointsWithinBounds(points, grid)).toBe(true);
-
-  points[0].xPosition = -1;
-  expect(allPointsWithinBounds(points, grid)).toBe(false);
-
-  points[0].xPosition = 21;
-  expect(allPointsWithinBounds(points, grid)).toBe(true);
-
-  points[0].yPosition = -1;
-  expect(allPointsWithinBounds(points, grid)).toBe(false);
-
-  points[0].yPosition = 15;
-  expect(allPointsWithinBounds(points, grid)).toBe(true);
-
-  points[0].xPosition = 22;
-  expect(allPointsWithinBounds(points, grid)).toBe(false);
-
-  points[0].xPosition = 10;
-  points[0].yPosition = 16;
-  expect(allPointsWithinBounds(points, grid)).toBe(false);
+  expect(distance).toBe(21);
 });
