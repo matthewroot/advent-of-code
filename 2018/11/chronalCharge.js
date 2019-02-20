@@ -1,21 +1,12 @@
 const GRID_SIZE = 300;
-const SQUARE_SIZE = 3;
 
-function findMaxPower(serialNumber) {
-  const fuelGrid = Array.from(new Array(GRID_SIZE), () => new Array(GRID_SIZE));
-
-  for (let x = 0; x < fuelGrid.length; x++) {
-    for (let y = 0; y < fuelGrid.length; y++) {
-      fuelGrid[x][y] = calculateFuelCellPower(serialNumber, x + 1, y + 1);
-    }
-  }
-
+function locateMaxPower(fuelGrid, squareSize) {
   let maxPower = 0;
   let maxPowerLocation;
 
-  for (let x = 0; x < fuelGrid.length - SQUARE_SIZE; x++) {
-    for (let y = 0; y < fuelGrid.length - SQUARE_SIZE; y++) {
-      const squarePower = calculateSquarePower(fuelGrid, x, y);
+  for (let x = 0; x < fuelGrid.length - squareSize; x++) {
+    for (let y = 0; y < fuelGrid.length - squareSize; y++) {
+      const squarePower = calculateSquarePower(fuelGrid, squareSize, x, y);
 
       if (squarePower > maxPower) {
         maxPower = squarePower;
@@ -24,7 +15,44 @@ function findMaxPower(serialNumber) {
     }
   }
 
-  return maxPowerLocation.join(',');
+  return { maxPowerLocation, maxPower };
+}
+
+function findMaxPower(serialNumber, squareSize) {
+  const fuelGrid = createFuelGrid(serialNumber);
+
+  return locateMaxPower(fuelGrid, squareSize);
+}
+
+function findVariableMaxPower(serialNumber) {
+  let variableMaxPower = 0;
+  let variableMaxPowerLocation;
+  const fuelGrid = createFuelGrid(serialNumber);
+
+  for (let squareSize = 1; squareSize < 301; squareSize++) {
+    let { maxPowerLocation, maxPower } = locateMaxPower(fuelGrid, squareSize);
+
+    if (maxPower > variableMaxPower) {
+      variableMaxPower = maxPower;
+      variableMaxPowerLocation = maxPowerLocation
+        .join(',')
+        .concat(`,${squareSize}`);
+    }
+  }
+
+  return variableMaxPowerLocation;
+}
+
+function createFuelGrid(serialNumber) {
+  const fuelGrid = Array.from(new Array(GRID_SIZE), () => new Array(GRID_SIZE));
+
+  for (let x = 0; x < fuelGrid.length; x++) {
+    for (let y = 0; y < fuelGrid.length; y++) {
+      fuelGrid[x][y] = calculateFuelCellPower(serialNumber, x + 1, y + 1);
+    }
+  }
+
+  return fuelGrid;
 }
 
 function calculateFuelCellPower(serialNumber, x, y) {
@@ -38,11 +66,11 @@ function calculateFuelCellPower(serialNumber, x, y) {
   return power;
 }
 
-function calculateSquarePower(grid, xCoord, yCoord) {
+function calculateSquarePower(grid, squareSize, xCoord, yCoord) {
   let squarePower = 0;
 
-  for (let x = xCoord; x < xCoord + SQUARE_SIZE; x++) {
-    for (let y = yCoord; y < yCoord + SQUARE_SIZE; y++) {
+  for (let x = xCoord; x < xCoord + squareSize; x++) {
+    for (let y = yCoord; y < yCoord + squareSize; y++) {
       squarePower += grid[x][y];
     }
   }
@@ -52,5 +80,6 @@ function calculateSquarePower(grid, xCoord, yCoord) {
 
 module.exports = {
   findMaxPower,
+  findVariableMaxPower,
   calculateFuelCellPower,
 };
