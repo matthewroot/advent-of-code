@@ -1,3 +1,5 @@
+const TrackMap = require('./TrackMap');
+
 // Goal, determine the x,y location of the first mine cart crash
 
 // * Parse input which is a map of the tracks and the starting cart locations
@@ -12,20 +14,23 @@
 
 // Data structures:
 //  * TrackMap - stores information about the map of tracks, location of carts
-//    * tracks (two dimensional matrix that maps the tracks)
-//    * carts (list of carts on the map, kept in order some how)
+//    * tracks (obejct that maps x,y coord to the type of track)
+//    * carts (list of carts on the map, sorted by move order after each tick)
 //    * cartOrderSort (func that sorts the list of carts to be in correct order)
 //    * advance (func that advances 'time' one step)
 //    * collisionOccurred (func that determines if a collision has occurred)
-//    * collisionLocation (func that determines location of first collision)
+//    * collisionLocation (location of first collision)
 //  * Cart - stores cart information and operations for a cart
 //    * orientation (>, <, V, ^)
 //    * location ([x, y])
 //    * nextIntersection ([l,s,r])
 //    * updateIntersection (func that rotates through l,s,r)
+//    * move (func that updates location based on orientation and current location)
 
-// TrackMap.init(inputData);
-// while(!TrackMap.collisionOccurred) {
-//    TrackMap.advance();
-// }
-// console.log(TrackMap.collisionLocation);
+let mineTracks = new TrackMap('input.txt');
+
+while (!mineTracks.collisionLocation) {
+  mineTracks.advanceTime();
+}
+
+console.log(mineTracks.collisionLocation);

@@ -6,7 +6,8 @@
   "author": "Matthew Root <root.matthew@gmail.com>",
   "license": "MIT",
   "devDependencies": {
-    "jest": "^23.6.0"
+    "jest": "^23.6.0",
+    "jsdoc": "^3.5.5"
   },
   "dependencies": {
     "node-fetch": "^2.3.0"
