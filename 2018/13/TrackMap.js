@@ -30,18 +30,20 @@ class TrackMap {
   }
 
   /**
-   * Advances 'time' by one tick, causes all carts to update their location and
+   * Advances 'time' by one tick. Causes all carts to update their location and
    * then checks to see if a collision has occurred.
    *
    * @memberof TrackMap
    */
   advanceTime() {
-    //   carts.forEach(cart => {
-    //     cart.move();
-    //     if (collisionOccurred(cart.location)) {
-    //       this.collisionLocation = cart.location;
-    //     }
-    //   });
+    // carts.forEach(cart => {
+    //   let previousLocation = cart.location;
+    //   cart.move();
+    //   cart.updateOrientation(previousLocation, valueAtLocation);
+    //   if (collisionOccurred(cart.location)) {
+    //     this.collisionLocation = cart.location;
+    //   }
+    // });
   }
 
   /**
