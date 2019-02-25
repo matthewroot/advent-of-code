@@ -27,10 +27,11 @@ const TrackMap = require('./TrackMap');
 //    * updateIntersection (func that rotates through l,s,r)
 //    * move (func that updates location based on orientation and current location)
 
-let mineTracks = new TrackMap('input.txt');
+let mine = new TrackMap();
+mine.init('input.txt');
 
-while (!mineTracks.collisionLocation) {
-  mineTracks.advanceTime();
+while (!mine.collisionLocation) {
+  mine.advanceTime();
 }
 
-console.log(mineTracks.collisionLocation);
+console.log(mine.collisionLocation);
