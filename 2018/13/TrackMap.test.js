@@ -102,4 +102,16 @@ describe('TrackMap', () => {
     mine.cartOrderSort();
     expect(mine.carts[0].orientation).toBe('v');
   });
+
+  test('removeCrashedCarts() filters out carts at the crash location', () => {
+    let mine = new TrackMap();
+    let crashLocation = { x: 2, y: 0 };
+
+    mine.init('testInput.txt');
+    mine.carts[1].location = crashLocation;
+    expect(mine.carts.length).toBe(2);
+
+    mine.removeCrashedCarts(crashLocation);
+    expect(mine.carts.length).toBe(0);
+  });
 });

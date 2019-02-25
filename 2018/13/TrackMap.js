@@ -75,11 +75,11 @@ class TrackMap {
 
       if (this.collisionOccurred(cart.location)) {
         this.collisionLocation = cart.location;
-        return;
+        this.removeCrashedCarts(this.collisionLocation);
+      } else {
+        let valueAtLocation = this.tracks[JSON.stringify(cart.location)];
+        cart.updateOrientation(previousLocation, valueAtLocation);
       }
-
-      let valueAtLocation = this.tracks[JSON.stringify(cart.location)];
-      cart.updateOrientation(previousLocation, valueAtLocation);
     });
   }
 
@@ -117,6 +117,22 @@ class TrackMap {
     }
 
     return false;
+  }
+
+  /**
+   * Updates carts array to remove both carts after a crash occurs
+   *
+   * @param {Object} crashLocation - the x,y coordinates of a crash
+   * @param {Object} crashLocation.x - the x coordinate of a crash
+   * @param {Object} crashLocation.y - the y coordinate of a crash
+   * @memberof TrackMap
+   */
+  removeCrashedCarts(crashLocation) {
+    this.carts = this.carts.filter(
+      cart =>
+        cart.location.x !== crashLocation.x ||
+        cart.location.y !== crashLocation.y
+    );
   }
 }
 
