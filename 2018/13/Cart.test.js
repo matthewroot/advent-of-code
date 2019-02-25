@@ -8,11 +8,11 @@ describe('Cart', () => {
 
     cart.orientation = '^';
     cart.move();
-    expect(cart.location).toEqual({ x: 2, y: 2 });
+    expect(cart.location).toEqual({ x: 2, y: 0 });
 
     cart.orientation = '<';
     cart.move();
-    expect(cart.location).toEqual({ x: 1, y: 2 });
+    expect(cart.location).toEqual({ x: 1, y: 0 });
 
     cart.orientation = 'v';
     cart.move();

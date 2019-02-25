@@ -10,7 +10,6 @@ const Cart = require('./Cart');
 class TrackMap {
   /**
    * Creates an instance of TrackMap.
-   * @param {string } filename - name of file containing input data
    * @memberof TrackMap
    */
   constructor() {
@@ -31,8 +30,6 @@ class TrackMap {
       .trim()
       .split('\n');
 
-    // Will need to handle case where cart currently is on a path
-    // "On your initial map, the track under each cart is a straight path matching the direction the cart is facing"
     lines.forEach((line, yPosition) => {
       line.split('').forEach((value, xPosition) => {
         let location = { x: xPosition, y: yPosition };
@@ -72,14 +69,18 @@ class TrackMap {
    * @memberof TrackMap
    */
   advanceTime() {
-    // carts.forEach(cart => {
-    //   let previousLocation = cart.location;
-    //   cart.move();
-    //   cart.updateOrientation(previousLocation, valueAtLocation);
-    //   if (collisionOccurred(cart.location)) {
-    //     this.collisionLocation = cart.location;
-    //   }
-    // });
+    this.carts.forEach(cart => {
+      let previousLocation = JSON.parse(JSON.stringify(cart.location));
+      cart.move();
+
+      if (this.collisionOccurred(cart.location)) {
+        this.collisionLocation = cart.location;
+        return;
+      }
+
+      let valueAtLocation = this.tracks[JSON.stringify(cart.location)];
+      cart.updateOrientation(previousLocation, valueAtLocation);
+    });
   }
 
   /**
@@ -88,7 +89,13 @@ class TrackMap {
    * @memberof TrackMap
    */
   cartOrderSort() {
-    //
+    this.carts.sort((a, b) => {
+      return a.location.x - b.location.x;
+    });
+
+    this.carts.sort((a, b) => {
+      return a.location.y - b.location.y;
+    });
   }
 
   /**
@@ -101,7 +108,15 @@ class TrackMap {
    * @memberof TrackMap
    */
   collisionOccurred(location) {
-    //
+    const cartsAtLocation = this.carts.filter(
+      cart => cart.location.x === location.x && cart.location.y === location.y
+    );
+
+    if (cartsAtLocation.length > 1) {
+      return true;
+    }
+
+    return false;
   }
 }
 

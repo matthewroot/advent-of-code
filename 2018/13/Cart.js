@@ -32,10 +32,10 @@ class Cart {
         this.location.x--;
         break;
       case '^':
-        this.location.y++;
+        this.location.y--;
         break;
       case 'v':
-        this.location.y--;
+        this.location.y++;
         break;
     }
   }

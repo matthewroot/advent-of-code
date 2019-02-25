@@ -45,4 +45,61 @@ describe('TrackMap', () => {
       expect(mine.tracks[noTrackLocation]).toBeUndefined();
     });
   });
+
+  test('collisionOccurred() returns true if two carts occupy the same location', () => {
+    const location = { x: 2, y: 0 };
+    let mine = new TrackMap();
+    mine.init('testInput.txt');
+    expect(mine.collisionOccurred(location)).toBe(false);
+
+    mine.carts[1].location = location;
+    expect(mine.collisionOccurred(location)).toBe(true);
+  });
+
+  describe('advanceTime()', () => {
+    let mine;
+
+    beforeEach(() => {
+      mine = new TrackMap();
+      mine.init('testInput.txt');
+    });
+
+    test('causes each cart to move', () => {
+      expect(mine.carts[0].location).toEqual({ x: 2, y: 0 });
+      expect(mine.carts[1].location).toEqual({ x: 9, y: 3 });
+
+      mine.advanceTime();
+      expect(mine.carts[0].location).toEqual({ x: 3, y: 0 });
+      expect(mine.carts[1].location).toEqual({ x: 9, y: 4 });
+    });
+
+    test('stores the location of a collision when one occurs', () => {
+      expect(mine.collisionLocation).toBeUndefined();
+
+      for (let ticks = 0; ticks < 14; ticks++) {
+        mine.advanceTime();
+      }
+
+      expect(mine.collisionLocation).toEqual({ x: 7, y: 3 });
+    });
+  });
+
+  test('cartOrderSort() puts carts in order starting at the left, moving top to bottom ', () => {
+    let mine = new TrackMap();
+    mine.init('testInput.txt');
+    mine.cartOrderSort();
+    expect(mine.carts[0].orientation).toBe('>');
+
+    mine.carts[0].location.y = 5;
+    mine.cartOrderSort();
+    expect(mine.carts[0].orientation).toBe('v');
+
+    mine.carts[1].location.y = 3;
+    mine.cartOrderSort();
+    expect(mine.carts[0].orientation).toBe('>');
+
+    mine.carts[0].location.x = 13;
+    mine.cartOrderSort();
+    expect(mine.carts[0].orientation).toBe('v');
+  });
 });
