@@ -3,7 +3,11 @@
  *
  * @class Cart
  */
-class Cart {
+export default class Cart {
+  orientation: string;
+  location: Location;
+  private intersectionDirections: string[];
+
   /**
    * Creates an instance of Cart.
    * @param {string} orientation - The direction the cart is facing
@@ -12,7 +16,8 @@ class Cart {
    * @param {Object} location.y - The y coordinate of the cart location
    * @memberof Cart
    */
-  constructor(orientation, location) {
+
+  constructor(orientation: string, location: Location) {
     this.orientation = orientation;
     this.location = location;
     this.intersectionDirections = ['left', 'straight', 'right'];
@@ -23,7 +28,7 @@ class Cart {
    *
    * @memberof Cart
    */
-  move() {
+  move(): void {
     switch (this.orientation) {
       case '>':
         this.location.x++;
@@ -49,10 +54,10 @@ class Cart {
    * @param {string} trackType - type of track, one of +, -, |, /, \
    * @memberof Cart
    */
-  updateOrientation(previousLocation, trackType) {
-    let orientations = ['<', '^', '>', 'v'];
-    let orientationIndex = orientations.indexOf(this.orientation);
-    let clockwise;
+  updateOrientation(previousLocation: Location, trackType: string): void {
+    let orientations: string[] = ['<', '^', '>', 'v'];
+    let orientationIndex: number = orientations.indexOf(this.orientation);
+    let clockwise: boolean;
 
     switch (trackType) {
       case '/':
@@ -97,7 +102,7 @@ class Cart {
    * @returns {boolean}
    * @memberof Cart
    */
-  isMovingClockwise(previousLocation, trackType) {
+  isMovingClockwise(previousLocation: Location, trackType: string): boolean {
     switch (trackType) {
       case '/':
         if (previousLocation.x === this.location.x) {
@@ -120,11 +125,14 @@ class Cart {
    * @returns {string} - the next direction
    * @memberof Cart
    */
-  nextIntersectionDirection() {
-    let nextDirection = this.intersectionDirections.shift();
+  nextIntersectionDirection(): string {
+    let nextDirection: string = this.intersectionDirections.shift();
     this.intersectionDirections.push(nextDirection);
     return nextDirection;
   }
 }
 
-module.exports = Cart;
+interface Location {
+  x: number;
+  y: number;
+}
