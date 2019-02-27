@@ -1,3 +1,5 @@
+import { Location } from './interfaces';
+
 /**
  * Represents a single cart
  *
@@ -130,9 +132,4 @@ export default class Cart {
     this.intersectionDirections.push(nextDirection);
     return nextDirection;
   }
-}
-
-interface Location {
-  x: number;
-  y: number;
 }
