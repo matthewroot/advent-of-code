@@ -1,54 +1,55 @@
-const TrackMap = require('./TrackMap');
+import TrackMap from './TrackMap';
+import { Location } from './interfaces';
 
 describe('TrackMap', () => {
   describe('init()', () => {
     test('builds a list of carts that are on the tracks', () => {
-      let mine = new TrackMap();
+      let mine: TrackMap = new TrackMap();
       expect(mine.carts.length).toBe(0);
 
       mine.init('testInput.txt');
       expect(mine.carts.length).toBe(2);
 
-      let firstCart = mine.carts[0];
+      let firstCart: any = mine.carts[0];
       expect(firstCart.constructor.name).toBe('Cart');
       expect(firstCart.orientation).toBe('>');
       expect(firstCart.location).toEqual({ x: 2, y: 0 });
     });
 
     test('builds a mapping of x,y coordinates to tracks', () => {
-      let mine = new TrackMap();
+      let mine: TrackMap = new TrackMap();
       mine.init('testInput.txt');
       expect(Object.keys(mine.tracks).length).toBe(48);
 
-      let curveLocation = JSON.stringify({ x: 0, y: 0 });
+      let curveLocation: string = JSON.stringify({ x: 0, y: 0 });
       expect(mine.tracks[curveLocation]).toBe('/');
 
-      let verticalLocation = JSON.stringify({ x: 0, y: 1 });
+      let verticalLocation: string = JSON.stringify({ x: 0, y: 1 });
       expect(mine.tracks[verticalLocation]).toBe('|');
 
-      let straightLocation = JSON.stringify({ x: 1, y: 0 });
+      let straightLocation: string = JSON.stringify({ x: 1, y: 0 });
       expect(mine.tracks[straightLocation]).toBe('-');
 
-      let curve2Location = JSON.stringify({ x: 0, y: 4 });
+      let curve2Location: string = JSON.stringify({ x: 0, y: 4 });
       expect(mine.tracks[curve2Location]).toBe('\\');
 
-      let intersectionLocation = JSON.stringify({ x: 4, y: 2 });
+      let intersectionLocation: string = JSON.stringify({ x: 4, y: 2 });
       expect(mine.tracks[intersectionLocation]).toBe('+');
 
-      let replacementStraightLocation = JSON.stringify({ x: 2, y: 0 });
+      let replacementStraightLocation: string = JSON.stringify({ x: 2, y: 0 });
       expect(mine.tracks[replacementStraightLocation]).toBe('-');
 
-      let replacementVerticalLocation = JSON.stringify({ x: 9, y: 3 });
+      let replacementVerticalLocation: string = JSON.stringify({ x: 9, y: 3 });
       expect(mine.tracks[replacementVerticalLocation]).toBe('|');
 
-      let noTrackLocation = JSON.stringify({ x: 5, y: 0 });
+      let noTrackLocation: string = JSON.stringify({ x: 5, y: 0 });
       expect(mine.tracks[noTrackLocation]).toBeUndefined();
     });
   });
 
   test('collisionOccurred() returns true if two carts occupy the same location', () => {
-    const location = { x: 2, y: 0 };
-    let mine = new TrackMap();
+    const location: Location = { x: 2, y: 0 };
+    let mine: TrackMap = new TrackMap();
     mine.init('testInput.txt');
     expect(mine.collisionOccurred(location)).toBe(false);
 
@@ -57,7 +58,7 @@ describe('TrackMap', () => {
   });
 
   describe('advanceTime()', () => {
-    let mine;
+    let mine: TrackMap;
 
     beforeEach(() => {
       mine = new TrackMap();
@@ -76,7 +77,7 @@ describe('TrackMap', () => {
     test('stores the location of a collision when one occurs', () => {
       expect(mine.collisionLocation).toBeUndefined();
 
-      for (let ticks = 0; ticks < 14; ticks++) {
+      for (let ticks: number = 0; ticks < 14; ticks++) {
         mine.advanceTime();
       }
 
@@ -85,7 +86,7 @@ describe('TrackMap', () => {
   });
 
   test('cartOrderSort() puts carts in order starting at the left, moving top to bottom ', () => {
-    let mine = new TrackMap();
+    let mine: TrackMap = new TrackMap();
     mine.init('testInput.txt');
     mine.cartOrderSort();
     expect(mine.carts[0].orientation).toBe('>');
@@ -104,8 +105,8 @@ describe('TrackMap', () => {
   });
 
   test('removeCrashedCarts() filters out carts at the crash location', () => {
-    let mine = new TrackMap();
-    let crashLocation = { x: 2, y: 0 };
+    let mine: TrackMap = new TrackMap();
+    let crashLocation: Location = { x: 2, y: 0 };
 
     mine.init('testInput.txt');
     mine.carts[1].location = crashLocation;

@@ -1,8 +1,8 @@
-const Cart = require('./Cart');
+import Cart from './Cart';
 
 describe('Cart', () => {
   test('move() updates cart location based on orientation', () => {
-    let cart = new Cart('>', { x: 1, y: 1 });
+    let cart: Cart = new Cart('>', { x: 1, y: 1 });
     cart.move();
     expect(cart.location).toEqual({ x: 2, y: 1 });
 
@@ -20,34 +20,38 @@ describe('Cart', () => {
   });
 
   describe('updateOrientation() changes cart orientation based on track type', () => {
-    let cart;
+    let cart: Cart;
 
     beforeEach(() => {
       cart = new Cart('>', { x: 1, y: 1 });
     });
 
     test('straight paths', () => {
-      let trackType = '-';
-      cart.updateOrientation({ x: 1, y: 1 }, { x: 2, y: 1 }, trackType);
+      let trackType: string = '-';
+      cart.location = { x: 2, y: 1 };
+      cart.updateOrientation({ x: 1, y: 1 }, trackType);
       expect(cart.orientation).toBe('>');
 
       cart.orientation = '<';
-      cart.updateOrientation({ x: 2, y: 1 }, { x: 1, y: 1 }, trackType);
+      cart.location = { x: 1, y: 1 };
+      cart.updateOrientation({ x: 2, y: 1 }, trackType);
       expect(cart.orientation).toBe('<');
 
       trackType = '|';
       cart.orientation = '^';
-      cart.updateOrientation({ x: 1, y: 1 }, { x: 1, y: 2 }, trackType);
+      cart.location = { x: 1, y: 2 };
+      cart.updateOrientation({ x: 1, y: 1 }, trackType);
       expect(cart.orientation).toBe('^');
 
       cart.orientation = 'v';
-      cart.updateOrientation({ x: 1, y: 2 }, { x: 1, y: 1 }, trackType);
+      cart.location = { x: 1, y: 1 };
+      cart.updateOrientation({ x: 1, y: 2 }, trackType);
       expect(cart.orientation).toBe('v');
     });
 
     test('curves', () => {
       // test: |/-, clockwise
-      let trackType = '/';
+      let trackType: string = '/';
       cart.orientation = '^';
       cart.location = { x: 0, y: 0 };
       cart.updateOrientation({ x: 0, y: 1 }, trackType);
@@ -100,7 +104,7 @@ describe('Cart', () => {
     });
 
     test('intersections', () => {
-      let trackType = '+';
+      let trackType: string = '+';
       cart.updateOrientation({ x: 0, y: 1 }, trackType);
       expect(cart.orientation).toBe('^');
 
@@ -113,7 +117,7 @@ describe('Cart', () => {
   });
 
   test('nextIntersectionDirection() rotates directions ', () => {
-    let cart = new Cart('>', { x: 1, y: 1 });
+    let cart: Cart = new Cart('>', { x: 1, y: 1 });
     expect(cart.nextIntersectionDirection()).toBe('left');
     expect(cart.nextIntersectionDirection()).toBe('straight');
     expect(cart.nextIntersectionDirection()).toBe('right');
