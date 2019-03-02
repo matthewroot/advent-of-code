@@ -1,13 +1,26 @@
 export default class CookingContest {
   currentRecipes: number[];
   scoreboard: number[];
+  targetRegister: number[];
+  input: string;
 
   constructor(participants: number) {
     this.currentRecipes = [0, 1];
     this.scoreboard = [3, 7];
+    this.targetRegister = [];
   }
 
+  /**
+   * Runs the cooking contest looking for scores after scoreboard reaches a
+   * designated length.
+   *
+   * @param {number} recipes
+   * @param {number} scoreCount
+   * @returns {string}
+   * @memberof CookingContest
+   */
   runContest(recipes: number, scoreCount: number): string {
+    this.input = recipes.toString();
     let scores: string = '';
 
     while (this.scoreboard.length < recipes + scoreCount) {
@@ -23,10 +36,30 @@ export default class CookingContest {
   }
 
   /**
+   * Runs the cooking contest looking for the number of recipes generated before
+   * the input is on the scoreboard.
+   *
+   * @param {string} input
+   * @returns {number}
+   * @memberof CookingContest
+   */
+  runSecondContest(input: string): number {
+    this.input = input;
+    let currentRegister: string = this.targetRegister.join('');
+
+    while (currentRegister !== input) {
+      this.createNewRecipes();
+      this.pickNewRecipes();
+      currentRegister = this.targetRegister.join('');
+    }
+
+    return this.scoreboard.join('').indexOf(input);
+  }
+
+  /**
    * Creates new recipes by summing the scores of current recipes and adding
    * these to the scoreboard.
    *
-   * @private
    * @memberof CookingContest
    */
   createNewRecipes(): void {
@@ -36,10 +69,28 @@ export default class CookingContest {
     );
 
     if (sum > 9) {
-      this.scoreboard.push(Math.floor(sum / 10));
+      let firstScore: number = Math.floor(sum / 10);
+      this.scoreboard.push(firstScore);
+      this.updateRegister(firstScore);
     }
 
-    this.scoreboard.push(sum % 10);
+    let secondScore: number = sum % 10;
+    this.scoreboard.push(secondScore);
+    this.updateRegister(secondScore);
+  }
+
+  /**
+   * Updates the targetRegister with latest recipes added to scoreboard.
+   *
+   * @param {number} score
+   * @memberof CookingContest
+   */
+  updateRegister(score: number): void {
+    if (this.targetRegister.length === this.input.length) {
+      this.targetRegister.shift();
+    }
+
+    this.targetRegister.push(score);
   }
 
   /**

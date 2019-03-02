@@ -8,7 +8,7 @@ beforeEach(() => {
 
 describe('CookingContest', () => {
   test('runContest() returns the correct scores', () => {
-    let scores = contest.runContest(9, 10);
+    let scores: string = contest.runContest(9, 10);
     expect(scores).toBe('5158916779');
 
     scores = contest.runContest(5, 10);
@@ -21,7 +21,22 @@ describe('CookingContest', () => {
     expect(scores).toBe('5941429882');
   });
 
+  test('runSecondContest() returns count of recipes', () => {
+    let input: string = '51589';
+    expect(contest.runSecondContest(input)).toEqual(9);
+
+    input = '01245';
+    expect(contest.runSecondContest(input)).toEqual(5);
+
+    input = '92510';
+    expect(contest.runSecondContest(input)).toEqual(18);
+
+    input = '59414';
+    expect(contest.runSecondContest(input)).toEqual(2018);
+  });
+
   test('createNewRecipes() adds new recipes based on current recipe scores', () => {
+    contest.input = '9';
     expect(contest.scoreboard).toEqual([3, 7]);
 
     contest.createNewRecipes();
