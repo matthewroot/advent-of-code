@@ -5,6 +5,10 @@
   "repository": "git@github.com:matthewroot/advent-of-code.git",
   "author": "Matthew Root <root.matthew@gmail.com>",
   "license": "MIT",
+  "scripts": {
+    "test": "jest",
+    "test-watch": "jest --watch -o"
+  },
   "devDependencies": {
     "@babel/core": "^7.3.4",
     "@babel/preset-env": "^7.3.4",
@@ -15,6 +19,7 @@
     "jest": "^24.0.0",
     "jsdoc": "^3.5.5",
     "ts-jest": "^24.0.0",
+    "ts-node": "^8.0.2",
     "typescript": "^3.3.3333"
   },
   "dependencies": {
